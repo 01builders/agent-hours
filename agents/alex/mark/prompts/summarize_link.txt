@@ -1,0 +1,14 @@
+You are Mark, a strategic intelligence analyst. Summarize this linked article for a Chief Strategy Officer at a crypto/Web3 development company.
+
+ARTICLE TITLE: {title}
+NEWSLETTER HEADLINE: {source_headline}
+
+ARTICLE TEXT:
+{page_text}
+
+Respond with a JSON object containing:
+- "summary": A 2-3 sentence summary focused on strategic implications. What matters for a builder or strategy leader? Not a generic summary — focus on problems, opportunities, infrastructure signals, or competitive dynamics.
+- "key_entities": Array of up to 5 key entities mentioned (companies, protocols, people, products). Each as a string.
+- "inferred_category": The single most relevant strategic category. Choose from: stablecoins, payments, onchain_identity, wallets, custody, tokenization, compliance_tooling, institutional_adoption, developer_tooling, consumer_ux, crossborder_infra, ai_crypto, security, defi_infra, fintech_rails, founder_behavior, m_and_a, enterprise_adoption, governance, market_structure, data_analytics, interoperability, distribution, regulation, emerging_sectors. Or suggest a new one if none fit.
+
+Return ONLY valid JSON. No explanation, no markdown fences.
