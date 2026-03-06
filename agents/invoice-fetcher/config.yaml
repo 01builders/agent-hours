@@ -1,0 +1,76 @@
+downloadsDir: ./data/downloads
+chromeProfileDir: ./data/chrome-profile
+driveFolderId: ""  # Set to your Google Drive folder ID
+
+services:
+  anthropic-api:
+    name: Anthropic API
+    billingUrl: https://console.anthropic.com/settings/billing
+    loginCheck: "sign in"
+    hints:
+      navigate: "click on invoices or billing history"
+      extract: "extract all invoice rows with date, amount, and invoice ID. If no unique ID exists, use the type plus amount as ID (e.g. 'monthly-invoice-54.20' or 'credit-grant-270.25')"
+      download: "click on the invoice row for {id} to open it, then click download or PDF"
+
+  claude-pro:
+    name: Claude Pro Subscription
+    billingUrl: https://claude.ai/settings/billing
+    loginCheck: "sign in"
+    hints:
+      navigate: "click on invoices or billing history or manage subscription"
+      extract: "extract all invoice or receipt rows with date, amount, and ID"
+      download: "click download or view receipt for invoice {id}"
+
+  openai-api:
+    name: OpenAI API
+    billingUrl: https://platform.openai.com/settings/organization/billing/overview
+    loginCheck: "sign in"
+    hints:
+      navigate: "click on billing history or past invoices"
+      extract: "extract all invoice rows with date, amount, invoice number"
+      download: "click the download or PDF icon for invoice {id}"
+
+  chatgpt-plus:
+    name: ChatGPT Plus Subscription
+    billingUrl: https://chatgpt.com/settings
+    loginCheck: "sign in"
+    hints:
+      navigate: "click on subscription or manage my subscription or billing"
+      extract: "extract all invoice or receipt rows with date, amount, and ID"
+      download: "click download or view receipt for invoice {id}"
+
+  vercel:
+    name: Vercel
+    billingUrl: https://vercel.com/account/settings/invoices
+    loginCheck: "log in"
+    hints:
+      navigate: "look at the invoices list on the page"
+      extract: "extract all invoice rows with date, amount, invoice ID"
+      download: "download invoice {id}"
+
+  railway:
+    name: Railway
+    billingUrl: https://railway.com/account/billing
+    loginCheck: "log in"
+    hints:
+      navigate: "scroll to invoice history section"
+      extract: "extract all invoices with date, amount, invoice number"
+      download: "click the invoice download link for {id}"
+
+  cursor:
+    name: Cursor
+    billingUrl: https://www.cursor.com/settings
+    loginCheck: "sign in"
+    hints:
+      navigate: "click on billing or subscription section"
+      extract: "extract all invoices with date and amount"
+      download: "download invoice for {date}"
+
+  midjourney:
+    name: Midjourney
+    billingUrl: https://www.midjourney.com/account
+    loginCheck: "sign in"
+    hints:
+      navigate: "navigate to billing or subscription page"
+      extract: "extract invoice history with dates and amounts"
+      download: "download invoice for {date}"
