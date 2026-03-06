@@ -93,7 +93,7 @@ A background discovery loop polls Sourcify automatically at the configured inter
 ### Install and run
 
 ```sh
-git clone https://github.com/julien-robert-music/bim.git  # or your fork
+git clone https://github.com/julienrbrt/bim.git  # or your fork
 cd bim
 cp config.example.yaml config.yaml
 ```
