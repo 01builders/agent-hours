@@ -22,7 +22,7 @@ export function saveState(statePath: string, state: AgentState): void {
 }
 
 /** Return the effective "since" timestamp — defaults to 7 days ago on first run. */
-export function getSince(state: AgentState): string {
+export function getEffectiveSince(state: AgentState): string {
     if (state.lastRunAt) return state.lastRunAt;
     return new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 }

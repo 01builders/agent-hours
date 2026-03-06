@@ -6,7 +6,7 @@ import { Octokit } from "@octokit/rest";
 import { Agent } from "@mariozechner/pi-agent-core";
 import { getModel } from "@mariozechner/pi-ai";
 import { loadConfig } from "./config.js";
-import { loadState, saveState, getSince } from "./state.js";
+import { loadState, saveState, getEffectiveSince } from "./state.js";
 import { loadSkills } from "./skills.js";
 import { makeListPrsTool } from "./tools/list-prs.js";
 import { makeGetPrDiffTool } from "./tools/get-pr-diff.js";
@@ -20,7 +20,7 @@ async function main() {
     // 1. Config, state & timestamps
     const config = loadConfig();
     const state = loadState(STATE_PATH);
-    const since = getSince(state);
+    const since = getEffectiveSince(state);
     const today = new Date().toISOString().slice(0, 10);
 
     console.log(`[refactoring-agent] Reviewing PRs since ${since}`);
@@ -39,10 +39,11 @@ async function main() {
 
     // 4. GitHub tools (factory functions close over octokit + repo coords + since)
     const octokit = new Octokit({ auth: config.githubToken });
+    const defaultBranch = process.env.BASE_BRANCH ?? "main";
     const tools = [
         makeListPrsTool(octokit, config.repoOwner, config.repoName, since),
         makeGetPrDiffTool(octokit, config.repoOwner, config.repoName),
-        makeCreateDraftPrTool(octokit, config.repoOwner, config.repoName),
+        makeCreateDraftPrTool(octokit, config.repoOwner, config.repoName, defaultBranch),
     ];
 
     // 5. Create agent
@@ -77,14 +78,9 @@ async function main() {
     // 7. Run the agent with an initial user prompt
     const branchName = `refactoring-suggestions-${today}`;
     await agent.prompt(
-        [
-            `Review all merged PRs for ${config.repoOwner}/${config.repoName} since ${since}.`,
-            `Call get_pr_diff for each PR to read the actual code changes.`,
-            `Then synthesise findings and call create_draft_pr with title "refactor: Suggestions ${today}"`,
-            `on branch "${branchName}".`,
-        ].join("\n")
+        `Review merged PRs for ${config.repoOwner}/${config.repoName} since ${since}, fetch their diffs, then open a draft PR titled "refactor: Suggestions ${today}" on branch "${branchName}".`
     );
-    await agent.waitForIdle();
+    // No waitForIdle() needed — agent.prompt() completes the full run
 
     // 8. Persist updated state
     saveState(STATE_PATH, { lastRunAt: new Date().toISOString() });

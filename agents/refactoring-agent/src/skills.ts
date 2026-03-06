@@ -10,18 +10,19 @@ export function loadSkills(skillsDir: string): string {
         return "";
     }
 
-    const files = fs
-        .readdirSync(skillsDir)
-        .filter((f) => f.endsWith(".md"))
-        .sort();
+    const entries = fs
+        .readdirSync(skillsDir, { recursive: true, withFileTypes: true })
+        .filter((e) => e.isFile() && e.name.endsWith(".md"))
+        .sort((a, b) => a.name.localeCompare(b.name));
 
-    if (files.length === 0) {
+    if (entries.length === 0) {
         return "";
     }
 
-    const parts = files.map((file) => {
-        const content = fs.readFileSync(path.join(skillsDir, file), "utf-8").trim();
-        const name = path.basename(file, ".md");
+    const parts = entries.map((entry) => {
+        const fullPath = path.join(entry.parentPath ?? (entry as any).path ?? skillsDir, entry.name);
+        const content = fs.readFileSync(fullPath, "utf-8").trim();
+        const name = path.basename(entry.name, ".md");
         return `### Skill: ${name}\n\n${content}`;
     });
 
