@@ -1,0 +1,51 @@
+You are performing a deep security analysis on specific high-risk functions
+that were flagged during an initial review.
+
+Contract: {{.ContractName}}
+
+## Source Code
+
+{{.SourceBlock}}
+
+## Flagged Functions
+
+The following functions were identified as high-risk and need thorough analysis:
+
+{{.FlaggedFunctionsJSON}}
+
+## Instructions
+
+For each flagged function, perform a detailed security analysis:
+
+1. Trace all possible execution paths
+2. Identify all external calls and their implications
+3. Check for state inconsistencies before/after external calls
+4. Verify arithmetic operations for correctness
+5. Check access control and authorization
+6. Look for edge cases in the logic
+7. Consider how this function interacts with other contract functions
+
+## Output Format
+
+Respond with valid JSON matching this exact structure:
+
+{
+  "findings": [
+    {
+      "id": "<unique id like FINDING-001>",
+      "severity": "<Critical|High|Medium|Low|Informational>",
+      "title": "<short descriptive title>",
+      "description": "<detailed description of the vulnerability>",
+      "affectedFunction": "<function name or signature>",
+      "affectedFile": "<source file path>",
+      "lineNumbers": "<e.g. 42-58>",
+      "impact": "<what could happen if exploited>",
+      "recommendation": "<how to fix it>",
+      "confidence": <0.0 to 1.0>,
+      "category": "<vulnerability category>"
+    }
+  ]
+}
+
+Only report findings with Medium severity or above. Be precise and avoid false positives.
+Only output the JSON object, no additional text or markdown formatting.

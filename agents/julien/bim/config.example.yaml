@@ -1,0 +1,35 @@
+# BiM configuration file.
+#
+# All settings have sensible defaults except google_api_key, which is required.
+# Environment variable BIM_CONFIG can point to this file (default: config.yaml).
+
+# Google Gemini API key (required).
+google_api_key: ""
+
+# Gemini model identifier.
+model_name: gemini-2.5-pro
+
+# Logging verbosity: debug, info, warn, error.
+log_level: info
+
+# Base directory for persisted data (reports, etc.).
+data_dir: ./data
+
+# Path to the SQLite database file.
+db_path: ./data/bim.db
+
+# Sourcify API base URL.
+sourcify_base_url: https://sourcify.dev/server
+
+# How often the discovery loop polls for new contracts.
+poll_interval: 60s
+
+# Blockchain networks to monitor.
+chains:
+  - id: 1
+    name: Ethereum Mainnet
+    rpc_url: https://eth.llamarpc.com
+
+  - id: 8453
+    name: Base
+    rpc_url: https://mainnet.base.org

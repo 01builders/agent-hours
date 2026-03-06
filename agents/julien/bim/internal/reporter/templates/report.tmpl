@@ -1,0 +1,61 @@
+Generate a complete bug bounty report for the following security finding.
+
+## Target Contract
+
+- **Chain ID:** {{.ChainID}}
+- **Address:** `{{.Address}}`
+
+## Finding Details
+
+- **Severity:** {{.Severity}}
+- **Title:** {{.Title}}
+- **Category:** {{.Category}}
+- **Affected Function:** `{{.AffectedFunction}}`
+{{- if .AffectedFile}}
+- **Affected File:** `{{.AffectedFile}}`
+{{- end}}
+{{- if .LineNumbers}}
+- **Line Numbers:** {{.LineNumbers}}
+{{- end}}
+- **Description:** {{.Description}}
+- **Impact:** {{.Impact}}
+- **Recommendation:** {{.Recommendation}}
+
+## Source Code
+
+{{.SourceBlock}}
+
+## Required Output
+
+Produce a report with the following sections in this exact order. Use Markdown formatting.
+
+### 1. Exploit Narrative
+
+Provide a numbered, step-by-step description of how an attacker would exploit this vulnerability. Include:
+- Preconditions required
+- Exact function calls the attacker makes
+- State changes at each step
+- How the attacker extracts value
+
+### 2. Impact Assessment
+
+Describe the impact in concrete terms:
+- What funds or assets are at risk
+- Who is affected (all users, specific roles, the protocol itself)
+- Upper bound of potential loss if known
+- Whether the exploit can be repeated
+
+### 3. Proof of Concept
+
+Write a complete Foundry test in Solidity that demonstrates the exploit. The test must:
+- Be a standalone file that compiles with `forge test`
+- Import necessary interfaces and set up the environment in `setUp()`
+- Have a test function named `test_exploit` that executes the attack
+- Use `assertGt`, `assertEq`, or similar assertions to prove the exploit succeeded
+- Include comments explaining each step
+- Use `vm.prank`, `vm.deal`, and other Foundry cheatcodes as needed
+- Fork mainnet state if the contract is already deployed, using the chain ID and address provided above
+
+### 4. Recommended Fix
+
+Provide specific code changes to fix the vulnerability. Show the exact lines to change with before/after diffs.

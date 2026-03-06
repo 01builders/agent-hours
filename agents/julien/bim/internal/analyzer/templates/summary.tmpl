@@ -1,0 +1,39 @@
+You are analyzing a source file from a multi-file smart contract.
+
+Contract: {{.ContractName}}
+File: {{.FilePath}}
+
+## Source Code
+
+{{.SourceCode}}
+
+## Instructions
+
+Provide a brief summary of this file and identify any functions that appear high-risk
+from a security perspective. Focus on:
+
+- Functions that handle value transfers (ETH or tokens)
+- Functions with external calls
+- Functions that modify critical state (balances, ownership, roles)
+- Functions with complex math or business logic
+- Functions that interact with external protocols (oracles, DEXes, lending)
+
+## Output Format
+
+Respond with valid JSON:
+
+{
+  "fileSummary": "<what this file does>",
+  "highRiskFunctions": [
+    {
+      "name": "<function name>",
+      "reason": "<why it's high risk>",
+      "lineRange": "<approximate line range>"
+    }
+  ],
+  "imports": ["<imported file paths>"],
+  "inherits": ["<inherited contract names>"],
+  "stateVariables": ["<critical state variable names>"]
+}
+
+Only output the JSON object, no additional text or markdown formatting.

@@ -1,0 +1,26 @@
+Write a Foundry proof-of-concept test that demonstrates the following vulnerability.
+
+**Chain ID:** {{.ChainID}}
+**Contract Address:** `{{.Address}}`
+**Vulnerability:** {{.Title}}
+**Severity:** {{.Severity}}
+**Category:** {{.Category}}
+**Affected Function:** `{{.AffectedFunction}}`
+**Description:** {{.Description}}
+
+**Relevant Source Code:**
+
+```solidity
+{{.RelevantSource}}
+```
+
+Requirements:
+- Output ONLY the Solidity test file, no explanation before or after.
+- The test must compile with Foundry (forge test).
+- Use pragma solidity ^0.8.0 or higher.
+- Import "forge-std/Test.sol".
+- Name the contract ExploitTest and extend Test.
+- Include a setUp() function that forks mainnet using vm.createSelectFork().
+- Include a test_exploit() function that demonstrates the attack.
+- Add inline comments explaining each step.
+- Use assertions to prove the exploit succeeded.
