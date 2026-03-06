@@ -9,7 +9,7 @@ export default tseslint.config(
     {
         languageOptions: {
             parserOptions: {
-                project: true,
+                project: "tsconfig.eslint.json",
                 tsconfigRootDir: import.meta.dirname,
             },
         },
@@ -21,6 +21,9 @@ export default tseslint.config(
             "@typescript-eslint/no-unsafe-member-access": "error",
             "@typescript-eslint/no-unsafe-return": "error",
             "@typescript-eslint/no-floating-promises": "error",
+
+            // Allow _-prefixed params (required by AgentTool interface signature)
+            "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
 
             // ── Clarity ───────────────────────────────────────────────────
             "@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true }],
@@ -45,6 +48,6 @@ export default tseslint.config(
         },
     },
 
-    // Ignore compiled output
-    { ignores: ["dist/**", "*.js"] },
+    // Ignore compiled output and the eslint config itself
+    { ignores: ["dist/**", "eslint.config.js"] },
 );

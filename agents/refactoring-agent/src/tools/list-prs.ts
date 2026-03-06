@@ -2,15 +2,24 @@ import { Type } from "@sinclair/typebox";
 import type { Octokit } from "@octokit/rest";
 import type { AgentTool } from "@mariozechner/pi-agent-core";
 
+type PrRecord = {
+    number: number;
+    title: string;
+    body: string;
+    merged_at: string | null;
+    author: string;
+    url: string;
+};
+
 export function makeListPrsTool(octokit: Octokit, owner: string, repo: string, since: string): AgentTool {
     return {
         name: "list_prs",
         label: "List PRs",
         description: `List pull requests for ${owner}/${repo} merged since ${since}. Returns an array of {number, title, body, merged_at, author, url}.`,
         parameters: Type.Object({}),
-        execute: async (_toolCallId, _params, _signal) => {
+        execute: async () => {
             const sinceDate = new Date(since);
-            const recent: Array<{ number: number; title: string; body: string; merged_at: string | null; author: string; url: string }> = [];
+            const recent: PrRecord[] = [];
 
             // Paginate and stop early once all results on a page are older than `since`
             for (let page = 1; ; page++) {

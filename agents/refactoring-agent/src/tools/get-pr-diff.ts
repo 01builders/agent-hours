@@ -12,7 +12,7 @@ export function makeGetPrDiffTool(octokit: Octokit, owner: string, repo: string)
         parameters: Type.Object({
             pr_number: Type.Number({ description: "The pull request number to fetch the diff for." }),
         }),
-        execute: async (_toolCallId, params, _signal) => {
+        execute: async (_toolCallId, params) => {
             const response = await octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
                 owner,
                 repo,

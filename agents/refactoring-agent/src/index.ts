@@ -16,7 +16,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const STATE_PATH = path.join(ROOT, "state.json");
 
-async function main() {
+async function main(): Promise<void> {
     // 1. Config, state & timestamps
     const config = loadConfig();
     const state = loadState(STATE_PATH);
@@ -51,7 +51,7 @@ async function main() {
     agent.setSystemPrompt(systemPrompt);
     agent.setModel(model);
     agent.setTools(tools);
-    agent.getApiKey = (_provider: string) => config.geminiApiKey;
+    agent.getApiKey = () => config.geminiApiKey;
 
     // 6. Log lifecycle events
     agent.subscribe((event) => {
@@ -70,7 +70,7 @@ async function main() {
                 else console.log(`[tool✓] ${event.toolName}`);
                 break;
             case "agent_end":
-                console.log(`[agent] Finished (${event.messages.length} messages).`);
+                console.log(`[agent] Finished (${String(event.messages.length)} messages).`);
                 break;
         }
     });

@@ -16,7 +16,7 @@ export function makeCreateDraftPrTool(octokit: Octokit, owner: string, repo: str
             body: Type.String({ description: "PR body in Markdown — the full refactoring suggestions document." }),
             branch: Type.String({ description: "Head branch name for the PR (will be created from base if missing)." }),
         }),
-        execute: async (_toolCallId, params, _signal) => {
+        execute: async (_toolCallId, params) => {
             const { title, body, branch } = params as { title: string; body: string; branch: string };
 
             // Create head branch from base tip; 422 = already exists, anything else is a real error
@@ -43,7 +43,7 @@ export function makeCreateDraftPrTool(octokit: Octokit, owner: string, repo: str
                 draft: true,
             });
 
-            const text = `Draft PR #${data.number} created: ${data.html_url}`;
+            const text = `Draft PR #${String(data.number)} created: ${data.html_url}`;
             return {
                 content: [{ type: "text" as const, text }],
                 details: { url: data.html_url, number: data.number },
