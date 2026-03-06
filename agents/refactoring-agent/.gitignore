@@ -1,0 +1,8 @@
+dist/
+node_modules/
+state.json
+.env
+.DS_Store
+.pnpm-store/
+.npm-cache/
+.yarn-cache/
