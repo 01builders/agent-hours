@@ -1,0 +1,153 @@
+groups:
+  - name: pi-agent-behavior
+    interval: 30s
+    rules:
+      - alert: PiAgentRunFailureRateHighWarning
+        expr: |
+          (
+            sum(rate(pi_runs_total{result=~"error|aborted|empty-output"}[10m]))
+            /
+            clamp_min(sum(rate(pi_runs_total[10m])), 0.001)
+          ) > 0.10
+        for: 10m
+        labels:
+          severity: warning
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi agent run failure ratio is high (warning)"
+          description: "Failure ratio over 10m is above 10%. Check pi_runs_total by result and recent application logs."
+
+      - alert: PiAgentRunFailureRateHighCritical
+        expr: |
+          (
+            sum(rate(pi_runs_total{result=~"error|aborted|empty-output"}[10m]))
+            /
+            clamp_min(sum(rate(pi_runs_total[10m])), 0.001)
+          ) > 0.25
+        for: 10m
+        labels:
+          severity: critical
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi agent run failure ratio is high (critical)"
+          description: "Failure ratio over 10m is above 25%. Investigate agent runtime, repository state, and upstream dependencies immediately."
+
+      - alert: PiAgentBusyContentionWarning
+        expr: rate(pi_runs_total{result="busy"}[5m]) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi agent busy contention detected (warning)"
+          description: "Busy run responses are sustained. Users may be hitting concurrent-run contention."
+
+      - alert: PiAgentBusyContentionCritical
+        expr: rate(pi_runs_total{result="busy"}[5m]) > 0.2
+        for: 10m
+        labels:
+          severity: critical
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi agent busy contention detected (critical)"
+          description: "High sustained busy-run rate indicates serious throughput contention."
+
+      - alert: PiAgentRunLatencyP95HighWarning
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le, mode) (rate(pi_run_duration_seconds_bucket[10m]))
+          ) > 60
+        for: 10m
+        labels:
+          severity: warning
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi agent p95 run latency is high (warning)"
+          description: "p95 pi_run_duration_seconds over 10m is above 60s for at least one mode."
+
+      - alert: PiAgentRunLatencyP95HighCritical
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le, mode) (rate(pi_run_duration_seconds_bucket[10m]))
+          ) > 180
+        for: 10m
+        labels:
+          severity: critical
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi agent p95 run latency is high (critical)"
+          description: "p95 pi_run_duration_seconds over 10m is above 180s for at least one mode."
+
+      - alert: PiAgentSessionIndexIoErrorsWarning
+        expr: increase(pi_session_index_io_errors_total[15m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi session index I/O errors detected (warning)"
+          description: "Session index read/write errors occurred in the last 15m."
+
+      - alert: PiAgentSessionIndexIoErrorsCritical
+        expr: increase(pi_session_index_io_errors_total[15m]) > 5
+        for: 5m
+        labels:
+          severity: critical
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi session index I/O errors detected (critical)"
+          description: "Multiple session index I/O errors occurred in the last 15m."
+
+      - alert: PiAgentAgentsMdLoadFailuresWarning
+        expr: increase(pi_agents_md_load_failures_total[15m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "AGENTS.md load failures detected (warning)"
+          description: "At least one AGENTS.md load failure occurred in the last 15m."
+
+      - alert: PiAgentAgentsMdLoadFailuresCritical
+        expr: increase(pi_agents_md_load_failures_total[15m]) > 5
+        for: 5m
+        labels:
+          severity: critical
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "AGENTS.md load failures detected (critical)"
+          description: "Frequent AGENTS.md load failures in the last 15m may block Pi runs."
+
+      - alert: PiAgentSessionCountHighWarning
+        expr: pi_sessions_active > 20
+        for: 10m
+        labels:
+          severity: warning
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi active session count is high (warning)"
+          description: "pi_sessions_active has been above 20 for 10m."
+
+      - alert: PiAgentSessionCountHighCritical
+        expr: pi_sessions_active > 50
+        for: 10m
+        labels:
+          severity: critical
+          service: prpilot
+          component: pi-agent
+        annotations:
+          summary: "Pi active session count is high (critical)"
+          description: "pi_sessions_active has been above 50 for 10m."
