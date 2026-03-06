@@ -91,7 +91,7 @@ python3 -m src.output.weekly_memo
 
 ## Lessons Learned
 
-- **Security awareness is the real learning curve.** My main concern throughout was downloading things, running commands I don't fully understand, and sharing keys and passwords without certainty I'm not exposing things I shouldn't. That tension between "get it working" and "am I doing this safely" is constant for a non-technical builder.
+- **Security awareness is the real learning curve.** My main concern throughout was downloading things, running commands I don't fully understand, and sharing keys and passwords without certainty I'm not exposing things I shouldn't.
 - **Judging quality takes time.** It will take real usage over weeks to know how well Mark is actually judging what matters vs what doesn't. The scoring framework is there, but calibrating it against my own strategic instincts requires accumulated data and repeated reading.
 - **Memory is the value — and the risk.** The trend tracking across 7/30/90-day windows is what makes this more than a summarizer. But memory keeps growing, and I have concerns about database size limits and performance over months of use. Something to watch.
 - **Prompting into a prompt works surprisingly well.** I was amazed how well I could describe what I wanted in plain language and have AI generate the actual detailed prompt that creates the agent. It didn't one-shot — errors came up along the way — but the troubleshooting was dramatically better than my experience months ago, where I'd get stuck in error loops and never finish. This time I actually shipped.
