@@ -1,0 +1,75 @@
+Analyze the following smart contract deployed on {{.ChainName}} at address {{.Address}}.
+
+Contract: {{.ContractName}}
+
+## Source Code
+
+{{.SourceBlock}}
+
+## Instructions
+
+Perform a comprehensive security analysis following these steps:
+
+1. **Contract Classification**: Identify the contract type (ERC-20, ERC-721, DEX, Lending, Staking, Bridge, Vault, Governance, Proxy, Other) and summarize its purpose.
+
+2. **Trust Boundary Analysis**: Enumerate all public and external functions. For each, identify:
+   - Who can call it (any user, owner, specific role)
+   - What state it modifies
+   - What external calls it makes
+
+3. **Fund Flow Tracing**: Trace how value (ETH, tokens) enters, moves through, and exits the contract.
+
+4. **Vulnerability Scan**: Check for the following vulnerability categories:
+   - **Reentrancy**: State changes after external calls, cross-function reentrancy, read-only reentrancy
+   - **Access Control**: Missing modifiers, improper role checks, unprotected initializers
+   - **Integer Issues**: Overflow/underflow (pre-0.8.0), unsafe casting, precision loss
+   - **Flash Loan Attacks**: Price manipulation via flash loans, oracle manipulation vectors
+   - **Oracle Manipulation**: Spot price dependencies, TWAP manipulation, stale price data
+   - **Unchecked External Calls**: Missing return value checks, silent failures
+   - **Storage Collisions**: Proxy pattern issues, unstructured storage conflicts
+   - **Logic Errors**: Incorrect math in swaps/lending/staking, wrong fee calculations, rounding errors
+   - **Denial of Service**: Unbounded loops, block gas limit issues, griefing vectors
+   - **Front-Running**: MEV extraction, sandwich attack vectors, transaction ordering dependencies
+   - **Privilege Escalation**: Owner key compromise impact, centralization risks, upgrade risks
+   - **Price Manipulation**: Manipulable pricing functions, reserve ratio attacks
+
+5. **Findings**: For each vulnerability found, provide:
+   - A severity rating: Critical, High, Medium, Low, or Informational
+   - A confidence score from 0.0 to 1.0
+   - The specific function and file affected
+   - Approximate line numbers if possible
+   - A clear description of the vulnerability
+   - The potential impact if exploited
+   - A recommended fix
+
+## Output Format
+
+Respond with valid JSON matching this exact structure:
+
+{
+  "summary": {
+    "type": "<contract type>",
+    "name": "<contract name>",
+    "description": "<brief description of what the contract does>",
+    "publicFunctions": ["<function signatures>"],
+    "totalSourceFiles": <number>,
+    "totalLines": <number>
+  },
+  "findings": [
+    {
+      "id": "<unique id like FINDING-001>",
+      "severity": "<Critical|High|Medium|Low|Informational>",
+      "title": "<short descriptive title>",
+      "description": "<detailed description of the vulnerability>",
+      "affectedFunction": "<function name or signature>",
+      "affectedFile": "<source file path>",
+      "lineNumbers": "<e.g. 42-58>",
+      "impact": "<what could happen if exploited>",
+      "recommendation": "<how to fix it>",
+      "confidence": <0.0 to 1.0>,
+      "category": "<vulnerability category>"
+    }
+  ]
+}
+
+Only output the JSON object, no additional text or markdown formatting.
