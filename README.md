@@ -29,6 +29,12 @@ By the end of the workshop, each participant should:
 - Build a first working version
 - Learn what makes an agent useful instead of impressive
 - Leave with a stronger framework for future AI projects
+- Submit your work to `/agents`
+- Present in the next company AI session
+  - What did you build? 
+  - How did you go about it? 
+  - What challenges did you encounter? 
+  - What were your learnings
 
 ## Standard For Success
 
