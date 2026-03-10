@@ -26,8 +26,47 @@ state.json            # Gitignored — persists lastRunAt timestamp
 ```bash
 cp .env.example .env
 # Fill in GITHUB_TOKEN, REPO_OWNER, REPO_NAME, GEMINI_API_KEY
+# Optional: FORK_OWNER, PR_ON_FORK, BASE_BRANCH
 npm install
 ```
+
+### GitHub Token Permissions
+
+The `GITHUB_TOKEN` (Personal Access Token) requires specific permissions depending on your workflow:
+
+#### Classic Token (ghp_...)
+- **Required Scopes**: `repo` (Full control of private repositories).
+- *Note:* This is required even for public repos if you intend to create branches or open PRs.
+
+#### Fine-Grained Token (github_pat_...)
+- **Repository Access**: Select your **fork** and the **original repository**.
+- **Repository Permissions**:
+  - `Contents`: **Read & write** (Required to read code from origin and create branches on fork).
+  - `Pull requests`: **Read & write** (Required to open the draft PR).
+  - `Metadata`: **Read-only** (Implicitly required).
+
+> [!IMPORTANT]
+> If the original repository belongs to an organization with SAML SSO, you must **manually authorize** the token for that organization after creation.
+
+#### Working on a Fork
+If you do not have write access to `REPO_OWNER/REPO_NAME`:
+1. **Fork** the repository on GitHub.
+2. Set `FORK_OWNER=your_username` in `.env`.
+3. Set `PR_ON_FORK=true` if you cannot open PRs back to the original repository.
+4. Ensure your PAT has **Write** access to your fork.
+
+### Troubleshooting
+
+#### Error: "Bad credentials"
+This means the `GITHUB_TOKEN` is invalid. 
+- Ensure the token is not **expired** or **revoked**.
+- Double-check for **extra spaces** or **quotes** in your `.env` file.
+- If the repository belongs to an organization, check if you need to **Authorize** the token for SAML SSO in your GitHub token settings.
+
+#### Error: "Resource not accessible by personal access token"
+This means the token is valid but lacks the required **scopes** or **repository access**.
+- For branch creation, ensure the **Contents** permission is set to **Read & Write**.
+- If using a fine-grained token with "Only select repositories", ensure **both** the origin and fork repositories are in the list.
 
 ## Running
 

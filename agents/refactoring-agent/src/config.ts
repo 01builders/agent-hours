@@ -8,6 +8,8 @@ export interface Config {
     githubToken: string;
     repoOwner: string;
     repoName: string;
+    forkOwner?: string;
+    prOnFork?: boolean;
     geminiApiKey: string;
     rootDir: string;
 }
@@ -22,8 +24,11 @@ export function loadConfig(): Config {
     const repoName = process.env.REPO_NAME;
     if (!repoName) throw new Error("REPO_NAME env var is required");
 
+    const forkOwner = process.env.FORK_OWNER;
+    const prOnFork = process.env.PR_ON_FORK === "true";
+
     const geminiApiKey = process.env.GEMINI_API_KEY;
     if (!geminiApiKey) throw new Error("GEMINI_API_KEY env var is required");
 
-    return { githubToken, repoOwner, repoName, geminiApiKey, rootDir: ROOT };
+    return { githubToken, repoOwner, repoName, forkOwner, prOnFork, geminiApiKey, rootDir: ROOT };
 }

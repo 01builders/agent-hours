@@ -35,15 +35,33 @@ async function main(): Promise<void> {
         .replace("{DATE}", today);
 
     // 3. Model — gemini-3-flash-preview is the closest available in this version
-    const model = getModel("google", "gemini-2.5-flash");
+    const model = getModel("google", "gemini-3.1-flash-lite-preview");
 
     // 4. GitHub tools (factory functions close over octokit + repo coords + since)
     const octokit = new Octokit({ auth: config.githubToken });
     const defaultBranch = process.env.BASE_BRANCH ?? "main";
+
+    // Fetch current main branch SHA
+    let currentMainSha: string | null = null;
+    try {
+        const { data: refData } = await octokit.rest.git.getRef({
+            owner: config.repoOwner,
+            repo: config.repoName,
+            ref: `heads/${defaultBranch}`,
+        });
+        currentMainSha = refData.object.sha;
+        console.log(`[refactoring-agent] Current ${defaultBranch} SHA: ${currentMainSha}`);
+        if (state.lastMainSha) {
+            console.log(`[refactoring-agent] Last run ${defaultBranch} SHA: ${state.lastMainSha}`);
+        }
+    } catch (err) {
+        console.error(`[refactoring-agent] Warning: could not fetch ${defaultBranch} ref:`, err);
+    }
+
     const tools = [
         makeListPrsTool(octokit, config.repoOwner, config.repoName, since),
         makeGetPrDiffTool(octokit, config.repoOwner, config.repoName),
-        makeCreateDraftPrTool(octokit, config.repoOwner, config.repoName, defaultBranch),
+        makeCreateDraftPrTool(octokit, config.repoOwner, config.repoName, defaultBranch, config.forkOwner, config.prOnFork),
     ];
 
     // 5. Create agent
@@ -66,8 +84,12 @@ async function main(): Promise<void> {
                 console.log(`[tool→] ${event.toolName}`);
                 break;
             case "tool_execution_end":
-                if (event.isError) console.error(`[tool✗] ${event.toolName}: error`);
-                else console.log(`[tool✓] ${event.toolName}`);
+                if (event.isError) {
+                    console.error(`[tool✗] ${event.toolName}: error`);
+                    console.error(event.result);
+                } else {
+                    console.log(`[tool✓] ${event.toolName}`);
+                }
                 break;
             case "agent_end":
                 console.log(`[agent] Finished (${String(event.messages.length)} messages).`);
@@ -83,7 +105,10 @@ async function main(): Promise<void> {
     // No waitForIdle() needed — agent.prompt() completes the full run
 
     // 8. Persist updated state
-    saveState(STATE_PATH, { lastRunAt: new Date().toISOString() });
+    saveState(STATE_PATH, {
+        lastRunAt: new Date().toISOString(),
+        lastMainSha: currentMainSha || state.lastMainSha,
+    });
     console.log("[refactoring-agent] Done — state updated.");
 }
 

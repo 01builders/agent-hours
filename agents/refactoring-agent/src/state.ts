@@ -3,9 +3,10 @@ import path from "path";
 
 export interface AgentState {
     lastRunAt: string | null;
+    lastMainSha: string | null;
 }
 
-const DEFAULT_STATE: AgentState = { lastRunAt: null };
+const DEFAULT_STATE: AgentState = { lastRunAt: null, lastMainSha: null };
 
 export function loadState(statePath: string): AgentState {
     if (!fs.existsSync(statePath)) return DEFAULT_STATE;
